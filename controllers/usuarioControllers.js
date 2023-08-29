@@ -50,7 +50,26 @@ const autenticar = async (req, res) => {
     }
 }
 
+const confirmar = async (req, res) => {
+    const {token} = req.params // escribimos "token" porque en usuarioRoutes lo definimos asi
+    const usuarioConfirmar = await Usuario.findOne({token})
+    if(!usuarioConfirmar){
+        const error = new Error('Token no valido')
+        return res.status(403).json({msg: error.message})
+    }
+
+    try {
+        usuarioConfirmar.confirmado = true // cambiamos el false por true
+        usuarioConfirmar.token = "" // el token es de un solo uso por eso lo eliminamos
+        await usuarioConfirmar.save() // guardamos en la DB
+        res.json({msg: "Usuario confirmado correctamente"})
+    } catch (error) {
+        console.error(error)    
+    }
+}
+
 export {
     registrar,
-    autenticar
+    autenticar,
+    confirmar
 }
