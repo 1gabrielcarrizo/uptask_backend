@@ -19,6 +19,11 @@ const registrar = async (req, res) => {
     }
 }
 
+const autenticar = async (req, res) => {
+    res.status(200).json({msg: "Ruta de autenticar"})
+}
+
 export {
-    registrar
+    registrar,
+    autenticar
 }
