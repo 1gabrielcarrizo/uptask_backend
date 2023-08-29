@@ -1,4 +1,6 @@
 import mongoose from "mongoose";
+import bcrypt from "bcrypt"
+
 const usuarioSchema = mongoose.Schema({
     nombre: {
         type: 'String',
@@ -26,5 +28,15 @@ const usuarioSchema = mongoose.Schema({
 }, {
     timestamps: true // crea 2 conlumnas mas, "creado" y "actualizado"
 })
+// se ejecuta antes de guardar en la DB
+usuarioSchema.pre('save', async function(next){
+    if(!this.isModified("password")){
+        next()
+    }
+    const salt = await bcrypt.genSalt()
+    this.password = await bcrypt.hash(this.password, salt)
+})
+
+
 const Usuario = mongoose.model("Usuario", usuarioSchema)
 export default Usuario
