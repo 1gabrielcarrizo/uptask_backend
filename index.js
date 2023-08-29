@@ -7,6 +7,9 @@ import usuarioRoutes from './routes/usuarioRoutes.js'
 
 const app = express()
 
+// permite leer lo que viene del body
+app.use(express.json())
+
 // variables de entorno
 dotenv.config()
 

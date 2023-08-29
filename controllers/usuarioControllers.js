@@ -1,17 +1,15 @@
+import Usuario from "../models/Usuario.js"
 
-const usuarios = (req, res) => { // "/" apunta a "/api/usuarios"
-    res.json({
-        msg: "Desde GET - API/USUARIOS"
-    })
-}
-
-const crearUsuario = (req, res) => { // "/" apunta a "/api/usuarios"
-    res.json({
-        msg: "Creando usuario"
-    })
+const registrar = async (req, res) => {
+    try {
+        const usuario = new Usuario(req.body) // crear usuario con la informacion del modelo
+        const usuarioAlmacenado = await usuario.save() // almacenar en mongoDB
+        res.status(201).json(usuarioAlmacenado) // retornamos el usuario almacenado
+    } catch (error) {
+        console.error(error)
+    }
 }
 
 export {
-    usuarios,
-    crearUsuario
+    registrar
 }
