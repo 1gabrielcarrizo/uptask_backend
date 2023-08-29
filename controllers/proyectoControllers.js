@@ -1,3 +1,4 @@
+import Projecto from "../models/Proyecto.js"
 
 // get para todos los proyecto
 const obtenerProyectos = async (req, res) => {
@@ -5,7 +6,14 @@ const obtenerProyectos = async (req, res) => {
 }
 // post para crear un proyecto
 const nuevoProyecto = async (req, res) => {
-    
+    const proyecto = new Projecto(req.body)
+    proyecto.creador = req.usuario._id // req.usuario viene del checkAuth
+    try {
+        const proyectoAlmacenado = await proyecto.save()
+        return res.json(proyectoAlmacenado)
+    } catch (error) {
+        console.error(error)
+    }
 }
 // get para un proyecto en especifico
 const obtenerProyecto = async (req, res) => {
