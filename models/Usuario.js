@@ -3,23 +3,23 @@ import bcrypt from "bcrypt"
 
 const usuarioSchema = mongoose.Schema({
     nombre: {
-        type: 'String',
+        type: String,
         required: true,
         trim: true // elimina los espacios
     },
     password: {
-        type: 'String',
+        type: String,
         required: true,
         trim: true // elimina los espacios
     },
     email: {
-        type: 'String',
+        type: String,
         required: true,
         trim: true, // elimina los espacios
         unique: true
     },
     token: {
-        type: 'String',
+        type: String,
     },
     confirmado: {
         type: Boolean,
