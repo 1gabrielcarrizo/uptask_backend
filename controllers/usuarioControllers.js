@@ -68,8 +68,60 @@ const confirmar = async (req, res) => {
     }
 }
 
+const olvidePassword = async (req, res) => {
+    const {email} = req.body
+    // comprobar si el usuario existe
+    const usuario = await Usuario.findOne({email})
+    if(!usuario){
+        const error = new Error('El usuario no existe')
+        return res.status(404).json({msg: error.message})
+    }
+
+    try {
+        // si el usuario existe...
+        usuario.token = generarId()
+        await usuario.save()
+        return res.json({msg: 'Hemos enviado un email con las instrucciones'})
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+const comprobarToken = async (req, res) => {
+    const {token} = req.params
+    const tokenValido = await Usuario.findOne({token})
+    if(tokenValido){
+        return res.json({msg: "Token valido y el usuario existe"})
+    }else{
+        const error = new Error('Token no valido')
+        return res.status(403).json({msg: error.message})
+    }
+}
+
+const nuevoPassword = async (req, res) => {
+    const {token} = req.params
+    const {password} = req.body
+    const usuario = await Usuario.findOne({token})
+    if(usuario){
+        usuario.password = password
+        usuario.token = ""
+        try {
+            await usuario.save()
+            return res.json({msg: "Password modificado correctamente"})
+        } catch (error) {
+            console.error(error)
+        }
+    }else{
+        const error = new Error('Token no valido')
+        return res.status(403).json({msg: error.message})
+    }
+}
+
 export {
     registrar,
     autenticar,
-    confirmar
+    confirmar,
+    olvidePassword,
+    comprobarToken,
+    nuevoPassword
 }
