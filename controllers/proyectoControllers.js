@@ -62,7 +62,25 @@ const editarProyecto = async (req, res) => {
 }
 // delete para eliminar un proyecto en especifico
 const eliminarProyecto = async (req, res) => {
-    
+    const {id} = req.params
+    // consultar si el proyecto existe en la DB
+    const proyecto = await Projecto.findById(id)
+    if(!proyecto){
+        const error = new Error("Proyecto no encontrado")
+        return res.status(404).json({msg: error.message})
+    }
+    // si no es el creador o un colaborador..
+    if(proyecto.creador.toString() !== req.usuario._id.toString()){
+        const error = new Error("Accion no valida (no tienes los permisos)")
+        return res.status(401).json({msg: error.message})
+    }
+
+    try {
+        await proyecto.deleteOne() // esto elimina un proyecto de la DB
+        return res.json({msg: "Proyecto eliminado"})
+    } catch (error) {
+        console.error(error)
+    }
 }
 // get para agregar un colaborador
 const agregarColaborador = async (req, res) => {
