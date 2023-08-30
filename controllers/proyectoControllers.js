@@ -2,7 +2,7 @@ import Projecto from "../models/Proyecto.js"
 
 // get para todos los proyecto
 const obtenerProyectos = async (req, res) => {
-    // muestra los proyectos creador por un usuario en especifico
+    // muestra los proyectos creados por un usuario en especifico
     const proyectos = await Projecto.find().where("creador").equals(req.usuario)
     res.json(proyectos)
 }
@@ -17,9 +17,21 @@ const nuevoProyecto = async (req, res) => {
         console.error(error)
     }
 }
-// get para un proyecto en especifico
+// get para un proyecto en especifico por su ID
 const obtenerProyecto = async (req, res) => {
-    
+    const {id} = req.params
+    // consultar si el proyecto existe en la DB
+    const proyecto = await Projecto.findById(id)
+    if(!proyecto){
+        const error = new Error("Proyecto no encontrado")
+        return res.status(404).json({msg: error.message})
+    }
+    // si no es el creador o un colaborador..
+    if(proyecto.creador.toString() !== req.usuario._id.toString()){
+        const error = new Error("Accion no valida (no tienes los permisos)")
+        return res.status(401).json({msg: error.message})
+    }
+    return res.json(proyecto)
 }
 // put para editar un proyecto en especifico
 const editarProyecto = async (req, res) => {
