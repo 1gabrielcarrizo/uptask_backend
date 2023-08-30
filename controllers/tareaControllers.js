@@ -68,7 +68,25 @@ const actualizarTarea = async (req, res) => {
 }
 // delete para eliminar una tarea por su ID
 const eliminarTarea = async (req, res) => {
+    const {id} = req.params
+    const tarea = await Tarea.findById(id).populate("proyecto")
+    // si no existe la tarea..
+    if(!tarea){
+        const error = new Error("Tarea no encontrada")
+        return res.status(404).json({ msg: error.message })
+    }
+    // si no es el creador o un colaborador..
+    if(tarea.proyecto.creador.toString() !== req.usuario._id.toString()){
+        const error = new Error("Accion no valida (no eres el creador o un colaborador)")
+        return res.status(403).json({ msg: error.message })
+    }
 
+    try {
+        await tarea.deleteOne() // eliminar tarea de la DB
+        return res.json({msg: "Tarea eliminada correctamente"})
+    } catch (error) {
+        return res.status(400).json({msg: "Hubo un error"})
+    }
 }
 // post cambiamos el estado de una tarea por su ID
 const cambiarEstado = async (req, res) => {
