@@ -15,7 +15,6 @@ const checkAuth = async (req, res, next) => {
             return next()
         } catch (error) {
             // en caso de que el token ya haya expirado o no sea un token valido
-            console.error(error)
             return res.status(400).json({msg: "Hubo un error"})
         }
     }
@@ -24,7 +23,6 @@ const checkAuth = async (req, res, next) => {
         const error = new Error('Token no valido (no hay un token)')
         return res.status(401).json({msg: error.message})
     }
-    // next()
 }
 
 export default checkAuth
