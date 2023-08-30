@@ -1,4 +1,5 @@
 import Proyecto from "../models/Proyecto.js"
+import Tarea from "../models/Tarea.js"
 
 // get para todos los proyecto
 const obtenerProyectos = async (req, res) => {
@@ -31,7 +32,13 @@ const obtenerProyecto = async (req, res) => {
         const error = new Error("Accion no valida (no tienes los permisos)")
         return res.status(401).json({msg: error.message})
     }
-    return res.json(proyecto)
+    // obtener las tareas
+    const tareas = await Tarea.find().where("proyecto").equals(proyecto._id)
+    
+    return res.json({
+        proyecto,
+        tareas
+    })
 }
 // put para editar un proyecto en especifico
 const editarProyecto = async (req, res) => {
@@ -90,10 +97,6 @@ const agregarColaborador = async (req, res) => {
 const eliminarColaborador = async (req, res) => {
     
 }
-// get para todas las tareas
-const obtenerTareas = async (req, res) => {
-    
-}
 
 export{
     obtenerProyectos,
@@ -102,6 +105,5 @@ export{
     editarProyecto,
     eliminarProyecto,
     agregarColaborador,
-    eliminarColaborador,
-    obtenerTareas
+    eliminarColaborador
 }
