@@ -1,14 +1,14 @@
-import Projecto from "../models/Proyecto.js"
+import Proyecto from "../models/Proyecto.js"
 
 // get para todos los proyecto
 const obtenerProyectos = async (req, res) => {
     // muestra los proyectos creados por un usuario en especifico
-    const proyectos = await Projecto.find().where("creador").equals(req.usuario)
+    const proyectos = await Proyecto.find().where("creador").equals(req.usuario)
     res.json(proyectos)
 }
 // post para crear un proyecto
 const nuevoProyecto = async (req, res) => {
-    const proyecto = new Projecto(req.body)
+    const proyecto = new Proyecto(req.body)
     proyecto.creador = req.usuario._id // req.usuario viene del checkAuth
     try {
         const proyectoAlmacenado = await proyecto.save()
@@ -21,7 +21,7 @@ const nuevoProyecto = async (req, res) => {
 const obtenerProyecto = async (req, res) => {
     const {id} = req.params
     // consultar si el proyecto existe en la DB
-    const proyecto = await Projecto.findById(id)
+    const proyecto = await Proyecto.findById(id)
     if(!proyecto){
         const error = new Error("Proyecto no encontrado")
         return res.status(404).json({msg: error.message})
@@ -37,7 +37,7 @@ const obtenerProyecto = async (req, res) => {
 const editarProyecto = async (req, res) => {
     const {id} = req.params
     // consultar si el proyecto existe en la DB
-    const proyecto = await Projecto.findById(id)
+    const proyecto = await Proyecto.findById(id)
     if(!proyecto){
         const error = new Error("Proyecto no encontrado")
         return res.status(404).json({msg: error.message})
@@ -64,7 +64,7 @@ const editarProyecto = async (req, res) => {
 const eliminarProyecto = async (req, res) => {
     const {id} = req.params
     // consultar si el proyecto existe en la DB
-    const proyecto = await Projecto.findById(id)
+    const proyecto = await Proyecto.findById(id)
     if(!proyecto){
         const error = new Error("Proyecto no encontrado")
         return res.status(404).json({msg: error.message})

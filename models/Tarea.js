@@ -25,12 +25,10 @@ const tareaSchema = mongoose.Schema({
         required: true,
         enum: ["Baja", "Media", "Alta"] // solo estaran disponible los valores dentro del []
     },
-    proyecto: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Proyecto"
-        }
-    ]
+    proyecto: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Proyecto"
+    }
 }, {
     timestamps: true // crea 2 conlumnas mas, "creado" y "actualizado"
 })
