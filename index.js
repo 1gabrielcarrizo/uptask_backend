@@ -5,6 +5,7 @@ import dotenv from 'dotenv'
 import conectarDB from './config/db.js'
 import usuarioRoutes from './routes/usuarioRoutes.js'
 import proyectoRoutes from './routes/proyectoRoutes.js'
+import tareaRoutes from './routes/tareaRoutes.js'
 
 const app = express()
 
@@ -20,6 +21,7 @@ conectarDB()
 // routing
 app.use("/api/usuarios", usuarioRoutes)
 app.use("/api/proyectos", proyectoRoutes)
+app.use("/api/tareas", tareaRoutes)
 
 app.listen(process.env.PORT, () => {
     console.log('Servidor en el puerto 4000')
