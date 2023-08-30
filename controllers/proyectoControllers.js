@@ -2,7 +2,9 @@ import Projecto from "../models/Proyecto.js"
 
 // get para todos los proyecto
 const obtenerProyectos = async (req, res) => {
-
+    // muestra los proyectos creador por un usuario en especifico
+    const proyectos = await Projecto.find().where("creador").equals(req.usuario)
+    res.json(proyectos)
 }
 // post para crear un proyecto
 const nuevoProyecto = async (req, res) => {
