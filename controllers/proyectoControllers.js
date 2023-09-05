@@ -32,13 +32,8 @@ const obtenerProyecto = async (req, res) => {
         const error = new Error("Accion no valida (no tienes los permisos)")
         return res.status(401).json({msg: error.message})
     }
-    // obtener las tareas
-    const tareas = await Tarea.find().where("proyecto").equals(proyecto._id)
     
-    return res.json({
-        proyecto,
-        tareas
-    })
+    return res.json(proyecto)
 }
 // put para editar un proyecto en especifico
 const editarProyecto = async (req, res) => {
