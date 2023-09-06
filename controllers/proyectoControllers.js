@@ -4,7 +4,7 @@ import Tarea from "../models/Tarea.js"
 // get para todos los proyecto
 const obtenerProyectos = async (req, res) => {
     // muestra los proyectos creados por un usuario en especifico
-    const proyectos = await Proyecto.find().where("creador").equals(req.usuario)
+    const proyectos = await Proyecto.find().where("creador").equals(req.usuario).select("-tareas")
     res.json(proyectos)
 }
 // post para crear un proyecto
@@ -22,7 +22,7 @@ const nuevoProyecto = async (req, res) => {
 const obtenerProyecto = async (req, res) => {
     const {id} = req.params
     // consultar si el proyecto existe en la DB
-    const proyecto = await Proyecto.findById(id)
+    const proyecto = await Proyecto.findById(id).populate('tareas') // se escribe "tareas" por el model en proyecto
     if(!proyecto){
         const error = new Error("Proyecto no encontrado")
         return res.status(404).json({msg: error.message})
