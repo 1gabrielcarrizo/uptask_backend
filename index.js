@@ -61,4 +61,8 @@ const io = new Server(servidor, {
 io.on("connection", (socket) => {
     console.log("Conectado a socket.io")
     // definir los eventos de socket.io
+    // cuando obtenga el evento de "prueba", hara lo siguiente...
+    socket.on('prueba', (proyectos) => {
+        console.log('Prueba desde Socket.io', proyectos)
+    })
 })
