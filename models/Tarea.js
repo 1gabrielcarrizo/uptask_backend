@@ -29,10 +29,9 @@ const tareaSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Proyecto"
     },
-    completado: {
+    completado: { // para saber quien completo una tarea...
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Usuario",
-        default: null
+        ref: "Usuario"
     }
 }, {
     timestamps: true // crea 2 conlumnas mas, "creado" y "actualizado"

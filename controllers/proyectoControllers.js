@@ -31,7 +31,8 @@ const obtenerProyecto = async (req, res) => {
     const {id} = req.params
     // consultar si el proyecto existe en la DB
     const proyecto = await Proyecto.findById(id)
-    .populate('tareas') // se escribe "tareas" por el model en proyecto
+    // .populate('tareas') // se escribe "tareas" por el model en proyecto
+    .populate({path: 'tareas', populate: {path: 'completado', select: 'nombre'}})
     .populate('colaboradores', 'nombre email') // se escribe "colaboradores" por el model en proyecto
     if(!proyecto){
         const error = new Error("Proyecto no encontrado")
