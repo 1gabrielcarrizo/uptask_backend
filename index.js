@@ -65,4 +65,11 @@ io.on("connection", (socket) => {
         // "join" hace que los usuarios entren a un proyecto diferente
         socket.join(proyecto)
     })
+    // agregar una nueva tarea
+    socket.on('nueva tarea', (tarea) => {
+        const proyecto = tarea.proyecto
+        // socket.on(proyecto).emit('tarea agregada', tarea)
+        socket.to(proyecto).emit('tarea agregada', tarea)
+        // io.to(proyecto).emit('tarea agregada', tarea)
+    })
 })
