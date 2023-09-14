@@ -41,6 +41,48 @@ app.use("/api/usuarios", usuarioRoutes)
 app.use("/api/proyectos", proyectoRoutes)
 app.use("/api/tareas", tareaRoutes)
 
-app.listen(process.env.PORT, () => {
+const servidor = app.listen(process.env.PORT, () => {
     console.log('Servidor en el puerto 4000')
+})
+
+
+
+// Socket.io
+import {Server} from 'socket.io'
+
+const io = new Server(servidor, {
+    pingTimeout: 60000,
+    cors: {
+        origin: process.env.FRONTEND_URL
+    }
+})
+
+// abrir conexion con socket.io
+io.on("connection", (socket) => {
+    console.log("Conectado a socket.io")
+    // definir los eventos de socket.io
+    socket.on('abrir proyecto', (proyecto) => {
+        // "join" hace que los usuarios entren a un proyecto diferente
+        socket.join(proyecto)
+    })
+    // agregar una nueva tarea
+    socket.on('nueva tarea', (tarea) => {
+        const proyecto = tarea.proyecto
+        socket.to(proyecto).emit('tarea agregada', tarea)
+    })
+    // eliminar una tarea
+    socket.on('eliminar tarea', (tarea) => {
+        const proyecto = tarea.proyecto
+        socket.to(proyecto).emit('tarea eliminada', tarea)
+    })
+    // actualizar una tarea
+    socket.on('actualizar tarea', (tarea) => {
+        const proyecto = tarea.proyecto._id
+        socket.to(proyecto).emit('tarea actualizada', tarea)
+    })
+    // completar una tarea
+    socket.on('cambiar estado', (tarea) => {
+        const proyecto = tarea.proyecto._id
+        socket.to(proyecto).emit('nuevo estado', tarea)
+    })
 })
