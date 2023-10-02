@@ -17,6 +17,7 @@ const obtenerProyectos = async (req, res) => {
 }
 // post para crear un proyecto
 const nuevoProyecto = async (req, res) => {
+    delete req.body.id
     const proyecto = new Proyecto(req.body)
     proyecto.creador = req.usuario._id // req.usuario viene del checkAuth
     try {
