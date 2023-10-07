@@ -18,11 +18,11 @@ export const emailRegistro = async (datos) => {
     });
     // informacion del email
     const info = await transport.sendMail({
-        from: '"ProjectMasterAdm - Administrador de Proyectos <cuentas@uptask.com>"',
+        from: '"ProjectMasterAdm - Administrador de Proyectos <projectmasteradm@gmail.com>"',
         to: email,
         subject: "ProjectMasterAdm - Confirma tu cuenta",
         text: "Comprueba tu cuenta en ProjectMasterAdm",
-        html: ` <p>Hola ${nombre}:</p>
+        html: `<p>Hola ${nombre}:</p>
         <p>Comprueba tu cuenta en ProjectMasterAdm.</p>
         <p>Tu cuenta ya esta casi lista, solo debes comprobarla en el siguiente enlace:
         <a href="${process.env.FRONTEND_URL}/confirmar/${token}">Comprobar Cuenta</a></p>
@@ -52,11 +52,11 @@ export const emailOlvidePassword = async (datos) => {
     });
     // informacion del email
     const info = await transport.sendMail({
-        from: '"ProjectMasterAdm - Administrador de Proyectos <cuentas@uptask.com>"',
+        from: '"ProjectMasterAdm - Administrador de Proyectos <projectmasteradm@gmail.com>"',
         to: email,
         subject: "ProjectMasterAdm - Reestablece tu Password",
         text: "Reestablece tu Password",
-        html: ` <p>Hola ${nombre}:</p>
+        html: `<p>Hola ${nombre}:</p>
         <p>Has solicitado reestablecer tu password.</p>
         <p>Sigue el siguiente enlace para generar un nuevo password:
         <a href="${process.env.FRONTEND_URL}/olvide-password/${token}">Reestablecer Password</a></p>
