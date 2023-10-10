@@ -9,7 +9,7 @@ export const emailRegistro = async (datos) => {
         host: process.env.GMAIL_HOST,
         port: process.env.GMAIL_PORT,
         service: "gmail",
-        secure: true, // seguridad
+        secure: false, // seguridad, se escribe "true" cuando el port es 465
         auth: {
             // crearse una cuenta en mailtrap para que te den el user y pass
             user: process.env.GMAIL_USER,
@@ -43,7 +43,7 @@ export const emailOlvidePassword = async (datos) => {
         host: process.env.GMAIL_HOST,
         port: process.env.GMAIL_PORT,
         service: "gmail",
-        secure: true, // seguridad
+        secure: false, // seguridad, se escribe "true" cuando el port es 465
         auth: {
             // crearse una cuenta en mailtrap para que te den el user y pass
             user: process.env.GMAIL_USER,
