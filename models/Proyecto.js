@@ -6,6 +6,10 @@ const proyectoSchema = mongoose.Schema({
         trim: true,
         required: true
     },
+    presupuesto: {
+        type: Number,
+        required: true
+    },
     descripcion: {
         type: String,
         trim: true,

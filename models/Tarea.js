@@ -11,6 +11,11 @@ const tareaSchema = mongoose.Schema({
         trim: true,
         required: true
     },
+    recurso: {
+        type: String,
+        trim: true,
+        required: true
+    },
     estado: { // si esta completado o no
         type: Boolean,
         default: false

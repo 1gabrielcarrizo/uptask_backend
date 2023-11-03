@@ -59,6 +59,7 @@ const actualizarTarea = async (req, res) => {
     // actualiza los campos por separado
     tarea.nombre = req.body.nombre || tarea.nombre
     tarea.descripcion = req.body.descripcion || tarea.descripcion
+    tarea.recurso = req.body.recurso || tarea.recurso
     tarea.prioridad = req.body.prioridad || tarea.prioridad
     tarea.fechaEntrega = req.body.fechaEntrega || tarea.fechaEntrega
 

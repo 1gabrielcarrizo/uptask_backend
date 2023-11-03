@@ -63,6 +63,7 @@ const editarProyecto = async (req, res) => {
     }
     // actualiza los campos por separado
     proyecto.nombre = req.body.nombre || proyecto.nombre
+    proyecto.presupuesto = req.body.presupuesto || proyecto.presupuesto
     proyecto.descripcion = req.body.descripcion || proyecto.descripcion
     proyecto.fechaEntrega = req.body.fechaEntrega || proyecto.fechaEntrega
     proyecto.cliente = req.body.cliente || proyecto.cliente
