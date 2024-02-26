@@ -7,6 +7,7 @@ import conectarDB from './config/db.js'
 import usuarioRoutes from './routes/usuarioRoutes.js'
 import proyectoRoutes from './routes/proyectoRoutes.js'
 import tareaRoutes from './routes/tareaRoutes.js'
+import Usuario from './models/Usuario.js'
 
 const app = express()
 
@@ -35,6 +36,29 @@ const corsOptions= {
 }
 
 app.use(cors(corsOptions))
+
+// Crear usuario por defecto si no existe
+const crearUsuarioPorDefecto = async () => {
+    try {
+        const existeUsuario = await Usuario.findOne({ email: 'admin@admin.com' });
+        if (!existeUsuario) {
+            // Si no existe el usuario por defecto, lo crea
+            const usuarioPorDefecto = new Usuario({
+                nombre: 'Admin',
+                email: 'admin@admin.com',
+                password: '123456',
+                confirmado: true // "true" evita verificar el usuario por medio del correo
+            });
+            await usuarioPorDefecto.save();
+            console.log('Usuario por defecto creado exitosamente.');
+        }
+    } catch (error) {
+        console.error('Error al crear el usuario por defecto:', error);
+    }
+}
+
+// Llama a la función para crear el usuario por defecto
+crearUsuarioPorDefecto();
 
 // routing
 app.use("/api/usuarios", usuarioRoutes)
