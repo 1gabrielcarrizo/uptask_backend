@@ -140,7 +140,12 @@ const agregarColaborador = async (req, res) => {
     // esta bien, se puede agregar
     proyecto.colaboradores.push(usuario._id)
     await proyecto.save()
-    return res.json({msg: 'Colaborador agregado correctamente'})
+    // --- CAMBIO: Devolver datos útiles para el socket ---
+    res.json({
+        msg: 'Colaborador agregado correctamente',
+        colaborador: usuario, // Devolvemos el usuario para saber a quien enviarle socket
+        proyecto: proyecto // Devolvemos el proyecto para actualizar dashboard
+    })
 }
 // delete para eliminar un colaborador
 const eliminarColaborador = async (req, res) => {
@@ -156,9 +161,16 @@ const eliminarColaborador = async (req, res) => {
         return res.status(404).json({msg: error.message})
     }
     // esta bien, se puede agregar
-    proyecto.colaboradores.pull(req.body.id)
+    // --- CAMBIO: Obtenemos ID del usuario a eliminar antes de borrarlo ---
+    const { id } = req.body
+    proyecto.colaboradores.pull(id)
     await proyecto.save()
-    return res.json({msg: 'Colaborador eliminado correctamente'})
+    // --- CAMBIO: Devolver datos para socket ---
+    res.json({
+        msg: 'Colaborador eliminado correctamente',
+        id: id, // ID del usuario eliminado
+        proyecto: proyecto
+    })
 }
 
 export{
