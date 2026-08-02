@@ -89,24 +89,66 @@ io.on("connection", (socket) => {
         // "join" hace que los usuarios entren a un proyecto diferente
         socket.join(proyecto)
     })
+    // Esto permite notificar a un usuario especifico (para el dashboard)
+    socket.on('conectado', (id) => {
+        socket.join(id)
+    })
     // agregar una nueva tarea
     socket.on('nueva tarea', (tarea) => {
-        const proyecto = tarea.proyecto
+        const proyecto = tarea.proyecto._id || tarea.proyecto
         socket.to(proyecto).emit('tarea agregada', tarea)
     })
     // eliminar una tarea
     socket.on('eliminar tarea', (tarea) => {
-        const proyecto = tarea.proyecto
+        const proyecto = tarea.proyecto._id || tarea.proyecto
         socket.to(proyecto).emit('tarea eliminada', tarea)
     })
     // actualizar una tarea
     socket.on('actualizar tarea', (tarea) => {
-        const proyecto = tarea.proyecto._id
+        const proyecto = tarea.proyecto._id || tarea.proyecto
         socket.to(proyecto).emit('tarea actualizada', tarea)
     })
     // completar una tarea
     socket.on('cambiar estado', (tarea) => {
-        const proyecto = tarea.proyecto._id
+        const proyecto = tarea.proyecto._id || tarea.proyecto
         socket.to(proyecto).emit('nuevo estado', tarea)
     })
+    // --- CAMBIO PARA ERROR 2: Eventos de Colaboradores ---
+    socket.on('nuevo colaborador', (datos) => {
+        const colaboradorId = datos.colaborador._id
+        // Le avisamos SOLO al colaborador que fue agregado
+        socket.to(colaboradorId).emit('colaborador agregado', datos.proyecto)
+    })
+    socket.on('eliminar colaborador', (datos) => {
+        const colaboradorId = datos.colaborador._id
+        // Le avisamos SOLO al colaborador que fue eliminado
+        socket.to(colaboradorId).emit('colaborador eliminado', datos.proyecto)
+    })
+    // --- NUEVOS EVENTOS ---
+    socket.on('editar proyecto', (proyecto) => {
+        // 1. Avisar a los que están DENTRO del proyecto (vista detallada)
+        socket.to(proyecto._id).emit('proyecto actualizado', proyecto)
+        
+        // 2. Avisar a los colaboradores en sus Dashboards
+        if(proyecto.colaboradores) {
+            proyecto.colaboradores.forEach(colaborador => {
+                // A veces colaborador es un objeto (si vino populado) o un ID.
+                const colaboradorId = colaborador._id || colaborador
+                socket.to(colaboradorId).emit('proyecto actualizado', proyecto)
+            })
+        }
+    })
+    socket.on('eliminar proyecto', (proyecto) => {
+        // 1. Avisar a los que están DENTRO del proyecto (para redirigirlos)
+        socket.to(proyecto._id).emit('proyecto eliminado', proyecto)
+
+        // 2. Avisar a los colaboradores (para eliminarlo de su Dashboard)
+        if(proyecto.colaboradores) {
+            proyecto.colaboradores.forEach(colaborador => {
+                const colaboradorId = colaborador._id || colaborador
+                socket.to(colaboradorId).emit('proyecto eliminado', proyecto)
+            })
+        }
+    })
+    // -----------------------
 })
