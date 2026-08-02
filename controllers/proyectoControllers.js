@@ -69,8 +69,11 @@ const editarProyecto = async (req, res) => {
     proyecto.cliente = req.body.cliente || proyecto.cliente
 
     try {
-        const proyectoAlmacenado = await proyecto.save()
-        return res.json(proyectoAlmacenado)
+        await proyecto.save()
+        // Volvemos a consultar con populate para devolver el objeto completo y que el socket no rompa el frontend
+        const proyectoActualizado = await Proyecto.findById(id)
+            .populate('colaboradores', 'nombre email')
+        return res.json(proyectoActualizado)
     } catch (error) {
         console.error(error)
     }
@@ -92,7 +95,8 @@ const eliminarProyecto = async (req, res) => {
 
     try {
         await proyecto.deleteOne() // esto elimina un proyecto de la DB
-        return res.json({msg: "Proyecto eliminado"})
+        // Devolvemos el proyecto eliminado para poder notificar a los colaboradores via socket
+        return res.json({ msg: "Proyecto eliminado", proyecto })
     } catch (error) {
         console.error(error)
     }

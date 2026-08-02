@@ -124,4 +124,31 @@ io.on("connection", (socket) => {
         // Le avisamos SOLO al colaborador que fue eliminado
         socket.to(colaboradorId).emit('colaborador eliminado', datos.proyecto)
     })
+    // --- NUEVOS EVENTOS ---
+    socket.on('editar proyecto', (proyecto) => {
+        // 1. Avisar a los que están DENTRO del proyecto (vista detallada)
+        socket.to(proyecto._id).emit('proyecto actualizado', proyecto)
+        
+        // 2. Avisar a los colaboradores en sus Dashboards
+        if(proyecto.colaboradores) {
+            proyecto.colaboradores.forEach(colaborador => {
+                // A veces colaborador es un objeto (si vino populado) o un ID.
+                const colaboradorId = colaborador._id || colaborador
+                socket.to(colaboradorId).emit('proyecto actualizado', proyecto)
+            })
+        }
+    })
+    socket.on('eliminar proyecto', (proyecto) => {
+        // 1. Avisar a los que están DENTRO del proyecto (para redirigirlos)
+        socket.to(proyecto._id).emit('proyecto eliminado', proyecto)
+
+        // 2. Avisar a los colaboradores (para eliminarlo de su Dashboard)
+        if(proyecto.colaboradores) {
+            proyecto.colaboradores.forEach(colaborador => {
+                const colaboradorId = colaborador._id || colaborador
+                socket.to(colaboradorId).emit('proyecto eliminado', proyecto)
+            })
+        }
+    })
+    // -----------------------
 })
